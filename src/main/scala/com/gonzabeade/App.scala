@@ -1,17 +1,14 @@
 package com.gonzabeade
 
 import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.functions._
 import org.apache.spark.sql.types._
-
-
 
 /**
  * @author ${user.name}
  */
 object App {
-  
-  def foo(x : Array[String]) = x.foldLeft("")((a,b) => a + b)
-  
+
   def main(args : Array[String]) {
 
     val spark = SparkSession
@@ -51,6 +48,11 @@ object App {
       .cache()
 
     trips.explain()
+    var dist = 100 // Get distance in metres from the driver
+    var result = ReturnTrips
+      .compute(trips, dist, spark)
+      .agg(count("*"))
+      .first.getLong(0)
 
 
     spark.stop()
