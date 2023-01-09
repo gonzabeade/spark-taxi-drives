@@ -47,14 +47,14 @@ object App {
       .where($"pickup_longitude" =!= 0 && $"pickup_latitude" =!= 0 && $"dropoff_longitude" =!= 0 && $"dropoff_latitude" =!= 0)
       .cache()
 
-    trips.explain()
-    var dist = 100 // Get distance in metres from the driver
-    var result = ReturnTrips
+    val dist = 100 // Get distance in metres from the driver
+    val result = ReturnTrips
       .compute(trips, dist, spark)
       .agg(count("*"))
-      .first.getLong(0)
+      .first
+      .getLong(0)
 
-
+    println("THE COUNT RESULT IS %d".format(result))
     spark.stop()
   }
 
